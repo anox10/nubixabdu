@@ -20,28 +20,62 @@ export function AuthProvider({ children }) {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // Fetch CLINORA profile + doctorProfile from backend /api/auth/me
+  // Fetch CLINORA profile + doctorProfile (Tries Express API first, falls back to direct Supabase query)
   const fetchProfile = async (accessToken) => {
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api";
     try {
-      const res = await fetch("/api/auth/me", {
+      const res = await fetch(`${API_BASE}/auth/me`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
-      if (!res.ok) throw new Error("Profile fetch failed");
+      if (!res.ok) throw new Error("Backend API unreachable");
       const data = await res.json();
       setUser(data.user);
       setDoctorProfile(data.doctorProfile || null);
       return data.user;
     } catch (err) {
-      console.warn("fetchProfile error:", err);
-      setUser(null);
-      setDoctorProfile(null);
-      return null;
+      // Vercel / Standalone static fallback: Query Supabase PostgreSQL directly!
+      try {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (!authUser) return null;
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", authUser.id)
+          .single();
+
+        let dp = null;
+        const currentRole = profile?.role || authUser.user_metadata?.role || "patient";
+        if (currentRole === "doctor") {
+          const { data: doctorData } = await supabase
+            .from("doctor_profiles")
+            .select("*")
+            .eq("user_id", authUser.id)
+            .single();
+          dp = doctorData || null;
+        }
+
+        const mappedUser = profile || {
+          id: authUser.id,
+          name: authUser.user_metadata?.name || authUser.email.split("@")[0],
+          email: authUser.email,
+          role: currentRole,
+          is_active: true,
+          is_approved: currentRole !== "doctor"
+        };
+
+        setUser(mappedUser);
+        setDoctorProfile(dp);
+        return mappedUser;
+      } catch (supabaseErr) {
+        console.warn("Direct Supabase profile fetch fallback error:", supabaseErr);
+        return null;
+      }
     }
   };
 
-  // Listen to Supabase auth state changes (handles refresh, logout, login)
+  // Listen to Supabase auth state changes
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.access_token) {
         fetchProfile(session.access_token).finally(() => setLoading(false));
@@ -50,7 +84,6 @@ export function AuthProvider({ children }) {
       }
     }).catch(() => setLoading(false));
 
-    // Subscribe to future changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (session?.access_token) {
@@ -103,7 +136,7 @@ export function AuthProvider({ children }) {
 
     const email = formData.email.trim().toLowerCase();
 
-    // Register via Supabase Auth (triggers profile creation)
+    // 1. Register user directly with Supabase Auth
     const { data, error } = await supabase.auth.signUp({
       email,
       password: formData.password,
@@ -121,16 +154,15 @@ export function AuthProvider({ children }) {
       throw new Error(msg);
     }
 
-    // Also call backend to ensure doctor_profiles + availability are set up
-    if (formData.role === "doctor" && data.session) {
-      await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${data.session.access_token}`
-        },
-        body: JSON.stringify(formData)
-      }).catch(console.error);
+    // 2. If Doctor, insert into doctor_profiles in Supabase directly
+    if (formData.role === "doctor" && data.user) {
+      await supabase.from("doctor_profiles").upsert({
+        user_id: data.user.id,
+        specialization: formData.specialization || "General Medicine",
+        bio: formData.bio || "Practicing clinical physician.",
+        experience_years: Number(formData.experience_years) || 1,
+        consultation_fee: 500
+      }, { onConflict: "user_id" }).catch(() => {});
     }
 
     let userProfile = null;
