@@ -1,0 +1,34 @@
+﻿# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment Variables (Protect Secret Keys)
+.env
+.env.local
+.env.*.local
+*.env
+backend/.env
+frontend/.env
+
+# Production Build outputs
+dist/
+build/
+*/dist/
+*/build/
+
+# Database files
+backend/data/
+*.sqlite
+*.db
+
+# Logs & temporary files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
