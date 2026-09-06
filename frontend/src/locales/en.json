@@ -1,0 +1,65 @@
+{
+  "common": {
+    "clinora": "CLINORA",
+    "hospitalPlatform": "Hospital Platform",
+    "signIn": "Sign In",
+    "register": "Register",
+    "logout": "Sign Out",
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "feedback": "Feedback",
+    "loading": "Loading...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "close": "Close"
+  },
+  "roles": {
+    "patient": "Patient",
+    "doctor": "Doctor",
+    "admin": "Admin",
+    "approved": "Approved",
+    "pending": "Pending"
+  },
+  "landing": {
+    "badge": "Modern Hospital Booking & Intake Platform",
+    "heroTitle": "Next-Generation Healthcare with",
+    "heroDescription": "Streamlined clinical intake, camera document capture, doctor slot scheduling, and flexible payment workflows designed for patient convenience and hospital efficiency.",
+    "signInPortal": "Sign In to Portal",
+    "createAccount": "Create New Account",
+    "structuredIntakeTitle": "Structured Case Intake",
+    "structuredIntakeDesc": "Record chief complaints, symptom durations, and clinical joint assessments. Capture X-rays and medical documents directly using your device camera or upload image files.",
+    "flexiblePaymentTitle": "Flexible Payment Options",
+    "flexiblePaymentDesc": "Pay online instantly via dynamic UPI QR code, UPI ID, or card, or choose Pay at Reception to settle fees upon hospital arrival.",
+    "secureRolesTitle": "Three Secure Roles",
+    "secureRolesDesc": "Specialized portals for Patients, verified Doctors, and Hospital Superadmins with real-time appointment tracking and operational analytics."
+  },
+  "patient": {
+    "dashboard": "Dashboard",
+    "clinicalCaseForm": "Clinical Case Form",
+    "myCases": "My Cases",
+    "bookSpecialist": "Book Specialist",
+    "myAppointments": "My Appointments",
+    "newCase": "New Case"
+  },
+  "doctor": {
+    "appointmentsQueue": "Appointments Queue",
+    "myAvailability": "My Availability",
+    "doctorProfile": "Doctor Profile"
+  },
+  "admin": {
+    "analyticsOverview": "Analytics & Overview",
+    "doctorApprovals": "Doctor Approvals",
+    "departments": "Departments",
+    "masterAppointments": "Master Appointments",
+    "userDirectory": "User Directory",
+    "issueReports": "Issue Reports"
+  },
+  "footer": {
+    "tagline": "Hospital Appointment & Intake Platform",
+    "secure": "Secure Role-Based Health Infrastructure"
+  }
+}

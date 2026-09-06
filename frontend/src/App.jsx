@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import Toast from './components/Toast';
@@ -32,6 +33,7 @@ import ReportedIssues from './pages/admin/ReportedIssues';
 
 function MainContent() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [activePage, setActivePage] = useState('landing');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
@@ -170,11 +172,11 @@ function MainContent() {
       <footer className="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-black text-green-500 tracking-tight text-sm">CLINORA</span>
+            <span className="font-black text-green-500 tracking-tight text-sm">{t('common.clinora')}</span>
             <span className="text-slate-600">|</span>
-            <span className="text-slate-300 font-semibold">Hospital Appointment & Intake Platform</span>
+            <span className="text-slate-300 font-semibold">{t('footer.tagline')}</span>
           </div>
-          <p className="text-slate-500">Secure Role-Based Health Infrastructure</p>
+          <p className="text-slate-500">{t('footer.secure')}</p>
         </div>
       </footer>
 
@@ -186,8 +188,10 @@ function MainContent() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MainContent />
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <MainContent />
+      </AuthProvider>
+    </LanguageProvider>
   );
 }

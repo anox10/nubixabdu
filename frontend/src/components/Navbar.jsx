@@ -1,5 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageDropdown from './LanguageDropdown';
 import {
   Activity,
   Calendar,
@@ -18,42 +20,43 @@ import {
 
 export default function Navbar({ activePage, setActivePage, onOpenReportModal }) {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
 
   const getNavLinks = () => {
     if (!user) {
       return [
-        { id: 'landing', label: 'Home' },
-        { id: 'login', label: 'Sign In' },
-        { id: 'register', label: 'Register' },
+        { id: 'landing', label: t('common.home') },
+        { id: 'login', label: t('common.signIn') },
+        { id: 'register', label: t('common.register') },
       ];
     }
 
     if (user.role === 'patient') {
       return [
-        { id: 'patient-dashboard', label: 'Dashboard', icon: Activity },
-        { id: 'patient-new-case', label: 'Clinical Case Form', icon: PlusCircle },
-        { id: 'patient-my-cases', label: 'My Cases', icon: ClipboardList },
-        { id: 'patient-book', label: 'Book Specialist', icon: Calendar },
-        { id: 'patient-appointments', label: 'My Appointments', icon: Clock },
+        { id: 'patient-dashboard', label: t('patient.dashboard'), icon: Activity },
+        { id: 'patient-new-case', label: t('patient.clinicalCaseForm'), icon: PlusCircle },
+        { id: 'patient-my-cases', label: t('patient.myCases'), icon: ClipboardList },
+        { id: 'patient-book', label: t('patient.bookSpecialist'), icon: Calendar },
+        { id: 'patient-appointments', label: t('patient.myAppointments'), icon: Clock },
       ];
     }
 
     if (user.role === 'doctor') {
       return [
-        { id: 'doctor-dashboard', label: 'Appointments Queue', icon: Calendar },
-        { id: 'doctor-availability', label: 'My Availability', icon: Clock },
-        { id: 'doctor-profile', label: 'Doctor Profile', icon: Stethoscope },
+        { id: 'doctor-dashboard', label: t('doctor.appointmentsQueue'), icon: Calendar },
+        { id: 'doctor-availability', label: t('doctor.myAvailability'), icon: Clock },
+        { id: 'doctor-profile', label: t('doctor.doctorProfile'), icon: Stethoscope },
       ];
     }
 
     if (user.role === 'admin') {
       return [
-        { id: 'admin-dashboard', label: 'Analytics & Overview', icon: Activity },
-        { id: 'admin-approvals', label: 'Doctor Approvals', icon: UserCheck },
-        { id: 'admin-specializations', label: 'Departments', icon: Building2 },
-        { id: 'admin-appointments', label: 'Master Appointments', icon: Calendar },
-        { id: 'admin-users', label: 'User Directory', icon: Users },
-        { id: 'admin-reports', label: 'Issue Reports', icon: AlertCircle },
+        { id: 'admin-dashboard', label: t('admin.analyticsOverview'), icon: Activity },
+        { id: 'admin-approvals', label: t('admin.doctorApprovals'), icon: UserCheck },
+        { id: 'admin-specializations', label: t('admin.departments'), icon: Building2 },
+        { id: 'admin-appointments', label: t('admin.masterAppointments'), icon: Calendar },
+        { id: 'admin-users', label: t('admin.userDirectory'), icon: Users },
+        { id: 'admin-reports', label: t('admin.issueReports'), icon: AlertCircle },
       ];
     }
 
@@ -88,10 +91,10 @@ export default function Navbar({ activePage, setActivePage, onOpenReportModal })
               </div>
               <div>
                 <span className="text-2xl font-black tracking-tight text-green-600 block leading-none">
-                  CLINORA
+                  {t('common.clinora')}
                 </span>
                 <span className="block text-[9px] uppercase font-bold tracking-widest text-slate-400 mt-0.5">
-                  Hospital Platform
+                  {t('common.hospitalPlatform')}
                 </span>
               </div>
             </button>
@@ -125,13 +128,15 @@ export default function Navbar({ activePage, setActivePage, onOpenReportModal })
           <div className="flex items-center gap-3">
             {user ? (
               <>
+                <LanguageDropdown />
+
                 <button
                   onClick={onOpenReportModal}
                   className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-amber-700 hover:bg-amber-50 border border-slate-200 transition-colors"
                   title="Report hospital issue / feedback"
                 >
                   <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Feedback</span>
+                  <span>{t('common.feedback')}</span>
                 </button>
 
                 <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
@@ -143,7 +148,7 @@ export default function Navbar({ activePage, setActivePage, onOpenReportModal })
                           roleColorBadges[user.role] || 'bg-slate-100 text-slate-700'
                         }`}
                       >
-                        {user.role}
+                        {t(`roles.${user.role}`)}
                       </span>
                       {user.role === 'doctor' && (
                         <span
@@ -151,7 +156,7 @@ export default function Navbar({ activePage, setActivePage, onOpenReportModal })
                             user.is_approved ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
                           }`}
                         >
-                          {user.is_approved ? 'Approved' : 'Pending'}
+                          {user.is_approved ? t('roles.approved') : t('roles.pending')}
                         </span>
                       )}
                     </div>
@@ -168,6 +173,8 @@ export default function Navbar({ activePage, setActivePage, onOpenReportModal })
               </>
             ) : (
               <div className="flex items-center gap-2">
+                <LanguageDropdown />
+
                 <button
                   onClick={() => setActivePage('login')}
                   className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
@@ -176,7 +183,7 @@ export default function Navbar({ activePage, setActivePage, onOpenReportModal })
                       : 'text-slate-700 hover:bg-slate-100'
                   }`}
                 >
-                  Sign In
+                  {t('common.signIn')}
                 </button>
                 <button
                   onClick={() => setActivePage('register')}
@@ -186,7 +193,7 @@ export default function Navbar({ activePage, setActivePage, onOpenReportModal })
                       : 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200'
                   }`}
                 >
-                  Register
+                  {t('common.register')}
                 </button>
               </div>
             )}
