@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
+import VoiceInput from '../../components/VoiceInput';
 import {
   FileText,
   HeartPulse,
@@ -116,14 +117,20 @@ export default function NewCase({ setActivePage }) {
               <HeartPulse className="w-4 h-4 text-green-600" />
               <span>1. Chief Complaint & Main Symptoms *</span>
             </label>
-            <textarea
-              required
-              rows={3}
-              value={chiefComplaint}
-              onChange={(e) => setChiefComplaint(e.target.value)}
-              placeholder="Describe your current pain, reason for visit, or clinical discomfort..."
-              className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400 font-medium"
-            />
+            <div className="flex gap-2">
+              <textarea
+                required
+                rows={3}
+                value={chiefComplaint}
+                onChange={(e) => setChiefComplaint(e.target.value)}
+                placeholder="Describe your current pain, reason for visit, or clinical discomfort..."
+                className="flex-1 px-4 py-3 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400 font-medium"
+              />
+              <VoiceInput
+                value={chiefComplaint}
+                onChange={setChiefComplaint}
+              />
+            </div>
           </div>
 
           {/* DURATION OF SYMPTOMS (KALA) */}
@@ -132,13 +139,19 @@ export default function NewCase({ setActivePage }) {
               <Clock className="w-4 h-4 text-green-600" />
               <span>DURATION OF SYMPTOMS (KALA)</span>
             </label>
-            <input
-              type="text"
-              value={durationOfSymptoms}
-              onChange={(e) => setDurationOfSymptoms(e.target.value)}
-              placeholder="e.g. 3 weeks / 6 months"
-              className="w-full px-4 py-2.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400 font-medium"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={durationOfSymptoms}
+                onChange={(e) => setDurationOfSymptoms(e.target.value)}
+                placeholder="e.g. 3 weeks / 6 months"
+                className="flex-1 px-4 py-2.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400 font-medium"
+              />
+              <VoiceInput
+                value={durationOfSymptoms}
+                onChange={setDurationOfSymptoms}
+              />
+            </div>
           </div>
 
           {/* 11. How are your joints? (Constitutional / Prakriti Assessment) */}
@@ -187,13 +200,19 @@ export default function NewCase({ setActivePage }) {
               <Shield className="w-4 h-4 text-slate-500" />
               <span>2. Past Medical & Surgical History</span>
             </label>
-            <textarea
-              rows={2}
-              value={pastHistory}
-              onChange={(e) => setPastHistory(e.target.value)}
-              placeholder="Existing medical conditions (Hypertension, Diabetes, Asthma), prior surgeries, or daily prescriptions..."
-              className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400"
-            />
+            <div className="flex gap-2">
+              <textarea
+                rows={2}
+                value={pastHistory}
+                onChange={(e) => setPastHistory(e.target.value)}
+                placeholder="Existing medical conditions (Hypertension, Diabetes, Asthma), prior surgeries, or daily prescriptions..."
+                className="flex-1 px-4 py-3 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400"
+              />
+              <VoiceInput
+                value={pastHistory}
+                onChange={setPastHistory}
+              />
+            </div>
           </div>
 
           {/* Drug & Allergy History */}
@@ -202,13 +221,19 @@ export default function NewCase({ setActivePage }) {
               <AlertTriangle className="w-4 h-4 text-amber-500" />
               <span>3. Drug & Allergy History</span>
             </label>
-            <textarea
-              rows={2}
-              value={drugAllergyHistory}
-              onChange={(e) => setDrugAllergyHistory(e.target.value)}
-              placeholder="Known medication allergies (Penicillin, Sulfa, NSAIDs) and reactions, or enter 'NKDA'..."
-              className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400"
-            />
+            <div className="flex gap-2">
+              <textarea
+                rows={2}
+                value={drugAllergyHistory}
+                onChange={(e) => setDrugAllergyHistory(e.target.value)}
+                placeholder="Known medication allergies (Penicillin, Sulfa, NSAIDs) and reactions, or enter 'NKDA'..."
+                className="flex-1 px-4 py-3 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400"
+              />
+              <VoiceInput
+                value={drugAllergyHistory}
+                onChange={setDrugAllergyHistory}
+              />
+            </div>
           </div>
 
           {/* Family History */}
@@ -219,13 +244,19 @@ export default function NewCase({ setActivePage }) {
               </span>
               <span>4. Family Medical History</span>
             </label>
-            <textarea
-              rows={2}
-              value={familyHistory}
-              onChange={(e) => setFamilyHistory(e.target.value)}
-              placeholder="Hereditary illnesses in biological parents or siblings (Heart disease, stroke, diabetes)..."
-              className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400"
-            />
+            <div className="flex gap-2">
+              <textarea
+                rows={2}
+                value={familyHistory}
+                onChange={(e) => setFamilyHistory(e.target.value)}
+                placeholder="Hereditary illnesses in biological parents or siblings (Heart disease, stroke, diabetes)..."
+                className="flex-1 px-4 py-3 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none placeholder:text-slate-400"
+              />
+              <VoiceInput
+                value={familyHistory}
+                onChange={setFamilyHistory}
+              />
+            </div>
           </div>
 
           {/* Document & Camera Upload Section */}
