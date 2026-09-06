@@ -1,0 +1,42 @@
+# Quick Deploy Instructions
+
+## Method 1: Double-Click the Batch File (EASIEST)
+
+1. Go to: `C:\Users\SYED\my-project\nubixabdu`
+2. Double-click: **`deploy-to-vercel.bat`**
+3. Answer the prompts:
+   - Link to existing? → **Y** (select clinora-deploy)
+   - Pull env variables? → **N**
+   - Override settings? → **N**
+4. Done!
+
+---
+
+## Method 2: Command Line (If batch file doesn't work)
+
+Open Command Prompt and copy-paste ALL these lines at once:
+
+```cmd
+cd /d C:\Users\SYED\my-project\nubixabdu\frontend
+vercel --prod
+```
+
+Then answer:
+- Link to existing? → **Y** (clinora-deploy)
+- Pull env variables? → **N**
+- Override settings? → **N**
+
+---
+
+## After Deployment
+
+Open: https://clinora-deploy.vercel.app
+
+Check:
+✅ Language dropdown (🌐 English, മലയാളം, हिन्दी, ಕನ್ನಡ)
+✅ Login works
+✅ No 404 error
+
+---
+
+**Try Method 1 (double-click the .bat file) - it's the easiest!**
