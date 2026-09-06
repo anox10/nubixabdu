@@ -2,19 +2,22 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import en from '../locales/en.json';
 import ml from '../locales/ml.json';
 import hi from '../locales/hi.json';
+import kn from '../locales/kn.json';
 
 const LanguageContext = createContext();
 
 const translations = {
   en,
   ml,
-  hi
+  hi,
+  kn
 };
 
 export const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'ml', name: 'മലയാളം', flag: '🇮🇳' },
-  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' }
+  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+  { code: 'kn', name: 'ಕನ್ನಡ', flag: '🇮🇳' }
 ];
 
 export function LanguageProvider({ children }) {
