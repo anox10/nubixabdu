@@ -1,8 +1,25 @@
 import React, { useState } from 'react';
-import { X, FileText, AlertTriangle, Clock, User, HeartPulse, Image, ZoomIn, FileCheck, Activity, Sparkles } from 'lucide-react';
+import {
+  X,
+  FileText,
+  AlertTriangle,
+  Clock,
+  User,
+  HeartPulse,
+  Image,
+  ZoomIn,
+  Sparkles,
+  Shield,
+  Users,
+  ChevronDown,
+  ChevronUp,
+  Activity
+} from 'lucide-react';
+import { parsePrakritiData, DOSHA_INFO } from '../data/prakritiData';
 
 export default function CaseModal({ caseData, onClose }) {
   const [zoomedImage, setZoomedImage] = useState(null);
+  const [showAllPrakritiDetails, setShowAllPrakritiDetails] = useState(false);
 
   if (!caseData) return null;
 
@@ -13,20 +30,21 @@ export default function CaseModal({ caseData, onClose }) {
     !caseData.drug_allergy_history.toLowerCase().includes('none');
 
   const attachments = Array.isArray(caseData.attachment_urls) ? caseData.attachment_urls : [];
+  const prakriti = parsePrakritiData(caseData.joint_assessment);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-slate-100">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-700 to-emerald-700 p-5 text-white flex items-center justify-between">
+        <div className="bg-gradient-to-r from-emerald-800 to-green-700 p-5 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md">
               <FileText className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold">Clinical Case & Documents</h3>
-              <p className="text-xs text-green-100 flex items-center gap-2 mt-0.5">
-                <span>Case Ref: {caseData.id}</span>
+              <h3 className="text-base sm:text-lg font-bold">Clinical Case & Prakriti Record</h3>
+              <p className="text-xs text-emerald-100 flex items-center gap-2 mt-0.5">
+                <span>Case Ref: {caseData.id?.slice(0, 8)}...</span>
                 <span>•</span>
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
@@ -60,10 +78,10 @@ export default function CaseModal({ caseData, onClose }) {
 
         {/* Body */}
         <div className="p-6 overflow-y-auto space-y-4 text-sm">
-          {/* Chief Complaint */}
-          <div className="bg-green-50/70 border border-green-200/80 rounded-2xl p-4">
-            <div className="flex items-center gap-2 text-green-900 font-bold mb-1.5">
-              <HeartPulse className="w-4 h-4 text-green-600" />
+          {/* 1. Chief Complaint */}
+          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-4">
+            <div className="flex items-center gap-2 text-emerald-900 font-bold mb-1.5">
+              <HeartPulse className="w-4 h-4 text-emerald-600" />
               <h4>1. Chief Complaint & Symptoms</h4>
             </div>
             <p className="text-slate-800 leading-relaxed pl-6 whitespace-pre-wrap font-medium">
@@ -71,12 +89,12 @@ export default function CaseModal({ caseData, onClose }) {
             </p>
           </div>
 
-          {/* DURATION OF SYMPTOMS (KALA) */}
+          {/* 2. DURATION OF SYMPTOMS (KALA) */}
           {caseData.duration_of_symptoms && (
             <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4">
               <div className="flex items-center gap-2 text-slate-900 font-bold mb-1">
-                <Clock className="w-4 h-4 text-green-600" />
-                <h4>Duration of Symptoms (Kala)</h4>
+                <Clock className="w-4 h-4 text-emerald-600" />
+                <h4>2. Duration of Symptoms (Kala)</h4>
               </div>
               <p className="text-slate-800 pl-6 font-semibold">
                 {caseData.duration_of_symptoms}
@@ -84,33 +102,126 @@ export default function CaseModal({ caseData, onClose }) {
             </div>
           )}
 
-          {/* 11. How are your joints? (Constitutional / Prakriti Assessment) */}
-          {caseData.joint_assessment && (
-            <div className="bg-emerald-50/40 border border-emerald-200 rounded-2xl p-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2 text-emerald-950 font-bold">
-                  <Activity className="w-4 h-4 text-green-600" />
-                  <h4>11. How are your joints? (Constitutional Assessment)</h4>
+          {/* 3. Ayurvedic Prakriti / Constitutional Profile */}
+          {prakriti && (
+            <div className="bg-gradient-to-br from-emerald-50/50 via-white to-slate-50 border-2 border-emerald-200 rounded-2xl p-4 space-y-3.5 shadow-xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-emerald-950 font-black text-xs sm:text-sm">
+                  <Sparkles className="w-4 h-4 text-emerald-600" />
+                  <h4>3. Ayurvedic Prakriti & Constitutional Profile</h4>
                 </div>
+                {prakriti.isStructured && (
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    12 Factors
+                  </span>
+                )}
               </div>
-              <p className="text-slate-900 pl-6 font-bold flex items-center gap-2">
-                <span>{caseData.joint_assessment}</span>
-              </p>
+
+              {prakriti.isStructured ? (
+                <div className="space-y-3 pl-1 sm:pl-6">
+                  {/* Dominant constitution badge */}
+                  <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs">
+                    <span className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">
+                      Dominant Constitution
+                    </span>
+                    <span className="text-sm font-black text-slate-900">
+                      {prakriti.dominant}
+                    </span>
+
+                    {/* Dosha Breakdown Bars */}
+                    <div className="grid grid-cols-3 gap-2 mt-2.5 pt-2.5 border-t border-slate-100">
+                      {/* Vata */}
+                      <div className="bg-indigo-50/80 border border-indigo-100 rounded-lg p-2 text-center">
+                        <span className="text-xs">🌬️</span>
+                        <span className="block text-[10px] font-black text-indigo-900 uppercase">Vata</span>
+                        <span className="text-xs font-black text-indigo-700">{prakriti.percentages?.vata || 0}%</span>
+                      </div>
+                      {/* Pitta */}
+                      <div className="bg-amber-50/80 border border-amber-100 rounded-lg p-2 text-center">
+                        <span className="text-xs">🔥</span>
+                        <span className="block text-[10px] font-black text-amber-900 uppercase">Pitta</span>
+                        <span className="text-xs font-black text-amber-700">{prakriti.percentages?.pitta || 0}%</span>
+                      </div>
+                      {/* Kapha */}
+                      <div className="bg-emerald-50/80 border border-emerald-100 rounded-lg p-2 text-center">
+                        <span className="text-xs">💧</span>
+                        <span className="block text-[10px] font-black text-emerald-900 uppercase">Kapha</span>
+                        <span className="text-xs font-black text-emerald-700">{prakriti.percentages?.kapha || 0}%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Toggle Detailed Answers */}
+                  {Array.isArray(prakriti.answers) && prakriti.answers.length > 0 && (
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setShowAllPrakritiDetails(!showAllPrakritiDetails)}
+                        className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 transition-colors"
+                      >
+                        <span>{showAllPrakritiDetails ? 'Hide' : 'View'} Detailed 12 Constitutional Answers</span>
+                        {showAllPrakritiDetails ? (
+                          <ChevronUp className="w-3.5 h-3.5" />
+                        ) : (
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+
+                      {showAllPrakritiDetails && (
+                        <div className="mt-2.5 space-y-2 bg-slate-50/80 rounded-xl p-3 border border-slate-200">
+                          {prakriti.answers.map((item, idx) => {
+                            const style = DOSHA_INFO[item.dosha] || DOSHA_INFO.VATA;
+                            return (
+                              <div
+                                key={idx}
+                                className="bg-white rounded-lg p-2.5 border border-slate-200/80 text-xs space-y-1"
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="font-bold text-slate-800">
+                                    {item.num ? `${item.num}. ` : ''}{item.title}
+                                    {item.sanskrit && (
+                                      <span className="text-[10px] text-slate-400 font-normal ml-1">
+                                        ({item.sanskrit})
+                                      </span>
+                                    )}
+                                  </span>
+                                  <span className={`px-2 py-0.2 rounded text-[10px] font-black uppercase ${style.badge}`}>
+                                    {style.icon} {item.dosha}
+                                  </span>
+                                </div>
+                                <p className="text-slate-600 text-[11px] leading-relaxed">
+                                  {item.label}
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Legacy fallback */
+                <p className="text-slate-900 pl-6 font-bold flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-emerald-600" />
+                  <span>{prakriti.rawText || caseData.joint_assessment}</span>
+                </p>
+              )}
             </div>
           )}
 
-          {/* Past History */}
+          {/* 4. Past History */}
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4">
             <h4 className="text-slate-900 font-bold mb-1.5 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-              2. Past Medical & Surgical History
+              <Shield className="w-4 h-4 text-slate-500" />
+              <span>4. Past Medical & Surgical History</span>
             </h4>
-            <p className="text-slate-700 leading-relaxed pl-4 whitespace-pre-wrap">
+            <p className="text-slate-700 leading-relaxed pl-6 whitespace-pre-wrap">
               {caseData.past_history || 'None reported.'}
             </p>
           </div>
 
-          {/* Drug & Allergy History */}
+          {/* 5. Drug & Allergy History */}
           <div
             className={`border rounded-2xl p-4 transition-all ${
               hasAllergies
@@ -123,9 +234,9 @@ export default function CaseModal({ caseData, onClose }) {
                 {hasAllergies ? (
                   <AlertTriangle className="w-4 h-4 text-rose-600" />
                 ) : (
-                  <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+                  <span className="w-2 h-2 rounded-full bg-slate-400 ml-1"></span>
                 )}
-                3. Drug & Allergy History
+                <span>5. Drug & Allergy History</span>
               </h4>
               {hasAllergies && (
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-rose-600 text-white rounded-full">
@@ -133,27 +244,27 @@ export default function CaseModal({ caseData, onClose }) {
                 </span>
               )}
             </div>
-            <p className="leading-relaxed pl-4 whitespace-pre-wrap">
+            <p className="leading-relaxed pl-6 whitespace-pre-wrap">
               {caseData.drug_allergy_history || 'No known drug allergies (NKDA).'}
             </p>
           </div>
 
-          {/* Family History */}
+          {/* 6. Family History */}
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4">
             <h4 className="text-slate-900 font-bold mb-1.5 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-              4. Family Medical History
+              <Users className="w-4 h-4 text-slate-500" />
+              <span>6. Family Medical History</span>
             </h4>
-            <p className="text-slate-700 leading-relaxed pl-4 whitespace-pre-wrap">
+            <p className="text-slate-700 leading-relaxed pl-6 whitespace-pre-wrap">
               {caseData.family_history || 'Non-contributory.'}
             </p>
           </div>
 
-          {/* Uploaded Documents / Reports / X-Ray Gallery */}
+          {/* 7. Uploaded Documents / Reports / X-Ray Gallery */}
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
             <h4 className="text-slate-900 font-bold flex items-center gap-2">
-              <Image className="w-4 h-4 text-green-600" />
-              <span>5. Uploaded Medical Documents & Diagnostics ({attachments.length})</span>
+              <Image className="w-4 h-4 text-emerald-600" />
+              <span>7. Uploaded Medical Documents & Diagnostics ({attachments.length})</span>
             </h4>
 
             {attachments.length === 0 ? (
