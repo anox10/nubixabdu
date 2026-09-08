@@ -58,6 +58,45 @@ async function request(endpoint, options = {}) {
 
 // Direct Supabase Client fallback (for standalone Netlify deployments)
 export const api = {
+  // Prakriti Assessment
+  savePrakritiResult: async (resultData) => {
+    try {
+      return await request('/prakriti', { method: 'POST', body: resultData });
+    } catch {
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data, error } = await supabase.from('prakriti_assessments').insert({
+        user_id: user.id,
+        vata_score: resultData.vata_score,
+        pitta_score: resultData.pitta_score,
+        kapha_score: resultData.kapha_score,
+        vata_percentage: resultData.vata_percentage,
+        pitta_percentage: resultData.pitta_percentage,
+        kapha_percentage: resultData.kapha_percentage,
+        result_type: resultData.result_type,
+        answers: resultData.answers
+      }).select().single();
+      if (error) throw error;
+      return { message: 'Prakriti result saved.', result: data };
+    }
+  },
+
+  getPrakritiResults: async () => {
+    try {
+      return await request('/prakriti');
+    } catch {
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data, error } = await supabase
+        .from('prakriti_assessments')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (error) throw error;
+      return { result: data };
+    }
+  },
+
   // Auth Profile
   getMe: async () => {
     try {

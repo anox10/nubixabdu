@@ -61,5 +61,31 @@
   "footer": {
     "tagline": "Hospital Appointment & Intake Platform",
     "secure": "Secure Role-Based Health Infrastructure"
+  },
+  "prakriti": {
+    "title": "Discover Your Prakriti",
+    "subtitle": "Answer a few questions to understand your predominant Ayurvedic constitution.",
+    "disclaimer": "This assessment is based on traditional Ayurvedic concepts and is intended for educational and wellness purposes only.",
+    "startTest": "Start Test",
+    "estimatedTime": "Estimated time: ~5 minutes",
+    "questions": "Questions",
+    "question": "Question",
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next",
+    "viewResults": "View Results",
+    "progress": "Progress",
+    "yourPrakriti": "Your Prakriti",
+    "yourResult": "Your Result",
+    "retakeTest": "Retake Test",
+    "saveResult": "Save Result",
+    "printResult": "Print Result",
+    "backToDashboard": "Back to Dashboard",
+    "completed": "Completed",
+    "notCompleted": "Not Completed",
+    "takeTest": "Take Test",
+    "viewResult": "View Result",
+    "lastAssessment": "Last Assessment",
+    "prakritiAssessment": "Prakriti Assessment"
   }
 }

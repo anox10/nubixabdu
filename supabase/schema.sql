@@ -184,6 +184,28 @@ create policy "rep_insert" on reports for insert with check (auth.uid() = report
 create policy "rep_update" on reports for update using (is_admin());
 
 -- ════════════════════════════════════════════════════════════
+-- 8. prakriti_assessments
+-- ════════════════════════════════════════════════════════════
+create table prakriti_assessments (
+  id              uuid primary key default uuid_generate_v4(),
+  user_id         uuid not null references profiles(id) on delete cascade,
+  vata_score      int not null default 0,
+  pitta_score     int not null default 0,
+  kapha_score     int not null default 0,
+  vata_percentage int not null default 0,
+  pitta_percentage int not null default 0,
+  kapha_percentage int not null default 0,
+  result_type     text not null default 'single' check (result_type in ('single','dual','tridosha')),
+  answers         jsonb not null default '{}',
+  created_at      timestamptz not null default now()
+);
+alter table prakriti_assessments enable row level security;
+
+create policy "prakriti_select_own"   on prakriti_assessments for select using (auth.uid() = user_id or is_admin());
+create policy "prakriti_insert_own"   on prakriti_assessments for insert with check (auth.uid() = user_id);
+create policy "prakriti_delete_own"   on prakriti_assessments for delete using (auth.uid() = user_id);
+
+-- ════════════════════════════════════════════════════════════
 -- TRIGGER: auto-create profile row on Supabase Auth signup
 -- ════════════════════════════════════════════════════════════
 create or replace function handle_new_user()

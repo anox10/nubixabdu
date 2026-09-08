@@ -10,6 +10,7 @@ import ReportIssueModal from './components/ReportIssueModal';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import PrakritiTest from './pages/PrakritiTest';
 
 // Patient Pages
 import PatientDashboard from './pages/patient/PatientDashboard';
@@ -152,6 +153,10 @@ function MainContent() {
             <ReportedIssues />
           </ProtectedRoute>
         );
+
+      // Prakriti Assessment
+      case 'prakriti-test':
+        return <PrakritiTest setActivePage={setActivePage} />;
 
       default:
         return <Landing setActivePage={setActivePage} />;

@@ -15,7 +15,8 @@ import {
   AlertCircle,
   LogOut,
   Clock,
-  LogIn
+  LogIn,
+  Sparkles
 } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage, onOpenReportModal }) {
@@ -38,6 +39,7 @@ export default function Navbar({ activePage, setActivePage, onOpenReportModal })
         { id: 'patient-my-cases', label: t('patient.myCases'), icon: ClipboardList },
         { id: 'patient-book', label: t('patient.bookSpecialist'), icon: Calendar },
         { id: 'patient-appointments', label: t('patient.myAppointments'), icon: Clock },
+        { id: 'prakriti-test', label: 'Prakriti', icon: Sparkles },
       ];
     }
 

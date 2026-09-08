@@ -12,7 +12,10 @@ import {
   HeartPulse,
   CreditCard,
   Building,
-  Image
+  Image,
+  Sparkles,
+  Eye,
+  Clock as ClockIcon
 } from 'lucide-react';
 import CaseModal from '../../components/CaseModal';
 
@@ -20,6 +23,7 @@ export default function PatientDashboard({ setActivePage }) {
   const { user } = useAuth();
   const [appointments, setAppointments] = useState([]);
   const [cases, setCases] = useState([]);
+  const [prakritiResult, setPrakritiResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCase, setSelectedCase] = useState(null);
 
@@ -27,12 +31,14 @@ export default function PatientDashboard({ setActivePage }) {
     async function loadData() {
       try {
         setLoading(true);
-        const [aptRes, casesRes] = await Promise.all([
+        const [aptRes, casesRes, prakritiRes] = await Promise.all([
           api.getMyAppointments(),
-          api.getMyCases()
+          api.getMyCases(),
+          api.getPrakritiResults().catch(() => ({ result: null }))
         ]);
         setAppointments(aptRes.appointments || []);
         setCases(casesRes.cases || []);
+        setPrakritiResult(prakritiRes.result || null);
       } catch (err) {
         console.error('Failed to load patient dashboard data:', err);
       } finally {
@@ -121,6 +127,21 @@ export default function PatientDashboard({ setActivePage }) {
           </div>
           <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
             <CheckCircle2 className="w-6 h-6" />
+          </div>
+        </div>
+
+        <div
+          className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs flex items-center justify-between cursor-pointer hover:border-green-300 transition-colors"
+          onClick={() => setActivePage('prakriti-test')}
+        >
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Prakriti Assessment</p>
+            <h3 className="text-3xl font-black text-slate-900 mt-1">
+              {prakritiResult ? '✓' : '—'}
+            </h3>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center">
+            <Sparkles className="w-6 h-6" />
           </div>
         </div>
       </div>
@@ -271,9 +292,30 @@ export default function PatientDashboard({ setActivePage }) {
 
         {/* Right Col: Quick Actions */}
         <div className="space-y-6">
+          {/* Prakriti Assessment Card */}
+          <div
+            className="bg-green-50/60 hover:bg-green-100/70 border border-green-100 transition-all flex items-start gap-3 group cursor-pointer rounded-2xl p-4"
+            onClick={() => setActivePage('prakriti-test')}
+          >
+            <div className="p-2 rounded-xl bg-green-600 text-white shadow-xs group-hover:scale-105 transition-transform">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-slate-900">Prakriti Assessment</h4>
+              <p className="text-xs text-slate-600 mt-0.5">
+                {prakritiResult ? 'View your Prakriti result' : 'Take the Ayurvedic constitution test'}
+              </p>
+              {prakritiResult && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 bg-green-100 text-green-800 text-[10px] font-bold rounded mt-1">
+                  Completed — {prakritiResult.dominantLabel}
+                </span>
+              )}
+            </div>
+          </div>
+
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs space-y-4">
             <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">
-              Patient Quick Actions
+              Quick Actions
             </h3>
 
             <button
