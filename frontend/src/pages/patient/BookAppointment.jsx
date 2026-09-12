@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { api } from '../../services/api';
 import {
   Search,
@@ -17,6 +18,7 @@ import PaymentModal from '../../components/PaymentModal';
 
 export default function BookAppointment({ setActivePage }) {
   const { showToast } = useAuth();
+  const { t } = useLanguage();
 
   const [specializations, setSpecializations] = useState([]);
   const [selectedSpec, setSelectedSpec] = useState('All');
@@ -89,7 +91,7 @@ export default function BookAppointment({ setActivePage }) {
         const data = await api.getDoctorSlots(selectedDoctor.id, bookingDate);
         setSlotsData(data);
       } catch (err) {
-        showToast('Failed to fetch doctor schedule slots.', 'error');
+        showToast(t('booking.toastSlotsFailed'), 'error');
       } finally {
         setLoadingSlots(false);
       }
@@ -100,7 +102,7 @@ export default function BookAppointment({ setActivePage }) {
   const handleOpenPaymentStep = () => {
     if (!selectedDoctor) return;
     if (!selectedSlot) {
-      showToast('Please select an available time slot.', 'warning');
+      showToast(t('booking.toastSelectSlot'), 'warning');
       return;
     }
     setIsPaymentModalOpen(true);
@@ -120,8 +122,8 @@ export default function BookAppointment({ setActivePage }) {
 
       showToast(
         paymentMethod === 'online'
-          ? `Visit booked with ${selectedDoctor.name}! Online payment confirmed.`
-          : `Visit booked! Please settle payment at hospital reception.`,
+          ? t('booking.toastBookingOnline', { name: selectedDoctor.name })
+          : t('booking.toastBookingReception'),
         'success'
       );
 
@@ -129,7 +131,7 @@ export default function BookAppointment({ setActivePage }) {
       setSelectedDoctor(null);
       setActivePage('patient-appointments');
     } catch (err) {
-      showToast(err.message || 'Booking failed.', 'error');
+      showToast(err.message || t('booking.toastBookingFailed'), 'error');
     } finally {
       setProcessingBooking(false);
     }
@@ -140,10 +142,10 @@ export default function BookAppointment({ setActivePage }) {
       <div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
           <Stethoscope className="w-7 h-7 text-green-600" />
-          <span>Book Specialist & Choose Payment</span>
+          <span>{t('booking.title')}</span>
         </h1>
         <p className="text-xs text-slate-500 mt-1">
-          Browse verified CLINORA doctors, select available 30-min consultation slots, and pay online or at reception.
+          {t('booking.subtitle')}
         </p>
       </div>
 
@@ -156,14 +158,14 @@ export default function BookAppointment({ setActivePage }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search doctor by name, department, or clinical keywords..."
+              placeholder={t('booking.searchPlaceholder')}
               className="w-full pl-10 pr-4 py-2 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none"
             />
           </div>
 
           <div className="flex items-center gap-2 text-xs font-bold text-slate-500 self-start sm:self-center">
             <Filter className="w-4 h-4 text-green-600" />
-            <span>Department:</span>
+            <span>{t('booking.department')}</span>
           </div>
         </div>
 
@@ -177,7 +179,7 @@ export default function BookAppointment({ setActivePage }) {
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            All Departments
+            {t('booking.allDepartments')}
           </button>
           {specializations.map((spec) => (
             <button
@@ -200,10 +202,10 @@ export default function BookAppointment({ setActivePage }) {
         {/* Doctor List */}
         <div className="lg:col-span-2 space-y-4">
           {loadingDocs ? (
-            <div className="py-12 text-center text-slate-400 text-sm">Loading doctors directory...</div>
+            <div className="py-12 text-center text-slate-400 text-sm">{t('booking.loadingDoctors')}</div>
           ) : doctors.length === 0 ? (
             <div className="bg-white rounded-3xl p-12 text-center border border-dashed border-slate-300">
-              <p className="text-sm text-slate-500">No approved doctors matched your department filter.</p>
+              <p className="text-sm text-slate-500">{t('booking.noDoctorsMatched')}</p>
             </div>
           ) : (
             doctors.map((doc) => {
@@ -224,7 +226,7 @@ export default function BookAppointment({ setActivePage }) {
                           {doc.specialization}
                         </span>
                         <span className="text-xs font-bold text-slate-500">
-                          {doc.experience_years} Years Experience
+                          {t('booking.yearsExperience', { years: doc.experience_years })}
                         </span>
                       </div>
 
@@ -232,10 +234,10 @@ export default function BookAppointment({ setActivePage }) {
                       <p className="text-xs text-slate-600 line-clamp-2">{doc.bio}</p>
 
                       <div className="flex flex-wrap items-center gap-2 pt-1">
-                        <span className="text-[11px] font-bold text-slate-500">Consultation Fee:</span>
+                        <span className="text-[11px] font-bold text-slate-500">{t('booking.consultationFee')}</span>
                         <span className="text-xs font-extrabold text-green-700">₹{doc.consultation_fee || 100}</span>
                         <span>•</span>
-                        <span className="text-[11px] font-bold text-slate-500">Working Days:</span>
+                        <span className="text-[11px] font-bold text-slate-500">{t('booking.workingDays')}</span>
                         {doc.availableDays && doc.availableDays.length > 0 ? (
                           doc.availableDays.map((day) => (
                             <span key={day} className="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] rounded-md font-semibold">
@@ -243,7 +245,7 @@ export default function BookAppointment({ setActivePage }) {
                             </span>
                           ))
                         ) : (
-                          <span className="text-[10px] text-slate-400 italic">Schedule not configured</span>
+                          <span className="text-[10px] text-slate-400 italic">{t('booking.scheduleNotConfigured')}</span>
                         )}
                       </div>
                     </div>
@@ -256,7 +258,7 @@ export default function BookAppointment({ setActivePage }) {
                           : 'bg-green-600 hover:bg-green-700 text-white'
                       }`}
                     >
-                      <span>{isSelected ? 'Selecting Slot' : 'Select Doctor'}</span>
+                      <span>{isSelected ? t('booking.selectingSlot') : t('booking.selectDoctor')}</span>
                       <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -272,7 +274,7 @@ export default function BookAppointment({ setActivePage }) {
             <div className="bg-white rounded-3xl border border-green-200 shadow-xl p-6 sticky top-20 space-y-5 animate-fade-in">
               <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-green-700">Selected Clinician</span>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-green-700">{t('booking.selectedClinician')}</span>
                   <h3 className="text-base font-black text-slate-900">{selectedDoctor.name}</h3>
                   <p className="text-xs text-slate-500">{selectedDoctor.specialization}</p>
                 </div>
@@ -280,7 +282,7 @@ export default function BookAppointment({ setActivePage }) {
                   onClick={() => setSelectedDoctor(null)}
                   className="text-xs text-slate-400 hover:text-slate-600 font-bold"
                 >
-                  Change
+                  {t('booking.change')}
                 </button>
               </div>
 
@@ -288,7 +290,7 @@ export default function BookAppointment({ setActivePage }) {
               <div className="space-y-2">
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                   <Calendar className="w-4 h-4 text-green-600" />
-                  <span>1. Choose Date</span>
+                  <span>{t('booking.chooseDate')}</span>
                 </label>
                 <input
                   type="date"
@@ -304,7 +306,7 @@ export default function BookAppointment({ setActivePage }) {
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
                     <Clock className="w-4 h-4 text-green-600" />
-                    <span>2. Available Slots</span>
+                    <span>{t('booking.availableSlots')}</span>
                   </span>
                   {slotsData?.dayOfWeek && (
                     <span className="text-[10px] text-green-800 font-bold bg-green-50 px-1.5 py-0.5 rounded">
@@ -314,14 +316,14 @@ export default function BookAppointment({ setActivePage }) {
                 </label>
 
                 {loadingSlots ? (
-                  <div className="py-6 text-center text-xs text-slate-400">Loading schedules...</div>
+                  <div className="py-6 text-center text-xs text-slate-400">{t('booking.loadingSchedules')}</div>
                 ) : !slotsData || !slotsData.isAvailable ? (
                   <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-900 leading-relaxed">
-                    {slotsData?.message || 'Doctor not available on this day.'}
+                    {slotsData?.message || t('booking.doctorNotAvailable')}
                   </div>
                 ) : slotsData.slots.length === 0 ? (
                   <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-500 text-center">
-                    No slots configured for this date.
+                    {t('booking.noSlotsConfigured')}
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-2 max-h-44 overflow-y-auto pr-1">
@@ -353,13 +355,13 @@ export default function BookAppointment({ setActivePage }) {
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
                     <FileText className="w-4 h-4 text-green-600" />
-                    <span>3. Attach Case & Documents</span>
+                    <span>{t('booking.attachCaseDocs')}</span>
                   </span>
                   <button
                     onClick={() => setActivePage('patient-new-case')}
                     className="text-[10px] font-bold text-green-600 hover:underline flex items-center gap-0.5"
                   >
-                    <PlusCircle className="w-3 h-3" /> New Case
+                    <PlusCircle className="w-3 h-3" /> {t('booking.newCase')}
                   </button>
                 </label>
 
@@ -371,13 +373,13 @@ export default function BookAppointment({ setActivePage }) {
                   >
                     {myCases.map((c) => (
                       <option key={c.id} value={c.id}>
-                        Case {c.id} - {c.chief_complaint.slice(0, 30)}... ({c.attachment_urls?.length || 0} Docs)
+                        {t('common.case')} {c.id} - {c.chief_complaint.slice(0, 30)}... ({c.attachment_urls?.length || 0} Docs)
                       </option>
                     ))}
                   </select>
                 ) : (
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500">
-                    No intake cases submitted yet.
+                    {t('booking.noIntakeCases')}
                   </div>
                 )}
               </div>
@@ -385,13 +387,13 @@ export default function BookAppointment({ setActivePage }) {
               {/* Notes */}
               <div className="space-y-1">
                 <label className="block text-[11px] font-bold uppercase text-slate-600">
-                  Notes for Doctor (Optional)
+                  {t('booking.notesForDoctor')}
                 </label>
                 <input
                   type="text"
                   value={bookingNotes}
                   onChange={(e) => setBookingNotes(e.target.value)}
-                  placeholder="e.g. Bringing previous lab scan..."
+                  placeholder={t('booking.notesPlaceholder')}
                   className="w-full px-3 py-1.5 rounded-xl border border-slate-300 text-xs outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
@@ -402,7 +404,7 @@ export default function BookAppointment({ setActivePage }) {
                 disabled={!selectedSlot}
                 className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-2xl shadow-md shadow-green-600/20 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
               >
-                <span>Proceed to Payment Step</span>
+                <span>{t('booking.proceedToPayment')}</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -411,9 +413,9 @@ export default function BookAppointment({ setActivePage }) {
               <div className="w-10 h-10 bg-green-100 rounded-2xl flex items-center justify-center text-green-700 mx-auto">
                 <Calendar className="w-5 h-5" />
               </div>
-              <h4 className="text-sm font-bold text-slate-800">Select a Specialist</h4>
+              <h4 className="text-sm font-bold text-slate-800">{t('booking.selectASpecialist')}</h4>
               <p className="text-xs text-slate-500">
-                Click "Select Doctor" on any profile card to configure appointment date, time slot, and payment method.
+                {t('booking.selectDoctorHint')}
               </p>
             </div>
           )}

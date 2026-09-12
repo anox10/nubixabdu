@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { api } from '../../services/api';
 import {
   Calendar,
@@ -21,6 +22,7 @@ import CaseModal from '../../components/CaseModal';
 
 export default function PatientDashboard({ setActivePage }) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [appointments, setAppointments] = useState([]);
   const [cases, setCases] = useState([]);
   const [prakritiResult, setPrakritiResult] = useState(null);
