@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth, isValidGmail } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { LogIn, Key, Mail, ShieldAlert, Activity, ArrowRight, UserPlus } from 'lucide-react';
 
 export default function Login({ setActivePage }) {
   const { login } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -40,9 +42,9 @@ export default function Login({ setActivePage }) {
             <Activity className="w-7 h-7 stroke-[2.5]" />
           </div>
           <h2 className="text-2xl font-black tracking-tight text-slate-900">
-            Sign In to <span className="text-green-600">CLINORA</span>
+            {t('login.signInClinora')}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">Role-agnostic login using your Gmail account</p>
+          <p className="text-xs text-slate-500 mt-1">{t('login.roleAgnosticLogin')}</p>
         </div>
 
         {errorMsg && (
@@ -69,13 +71,13 @@ export default function Login({ setActivePage }) {
               />
             </div>
             {email && !isValidGmail(email) && (
-              <p className="text-[11px] text-amber-600 mt-1 font-medium">Must end with @gmail.com</p>
+              <p className="text-[11px] text-amber-600 mt-1 font-medium">{t('login.mustEndGmail')}</p>
             )}
           </div>
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-              Password
+              {t('login.password')}
             </label>
             <div className="relative">
               <Key className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -96,18 +98,18 @@ export default function Login({ setActivePage }) {
             className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-extrabold text-xs sm:text-sm rounded-2xl transition-all shadow-md shadow-green-600/20 disabled:opacity-50 mt-2"
           >
             <LogIn className="w-4 h-4" />
-            <span>{submitting ? 'Authenticating...' : 'Sign In'}</span>
+            <span>{submitting ? t('login.authenticating') : t('login.signIn')}</span>
           </button>
         </form>
 
         {/* Register CTA */}
         <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
-          Need a patient or doctor account?{' '}
+          {t('login.needAccount')}{' '}
           <button
             onClick={() => setActivePage('register')}
             className="text-green-700 font-extrabold hover:underline"
           >
-            Register here
+            {t('login.registerHere')}
           </button>
         </div>
       </div>

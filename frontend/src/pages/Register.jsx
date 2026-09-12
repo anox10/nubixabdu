@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, isValidGmail } from '../context/AuthContext';
 import { api } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 import { UserPlus, Mail, Key, User, Stethoscope, Activity, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export default function Register({ setActivePage }) {
   const { register } = useAuth();
+  const { t } = useLanguage();
   const [role, setRole] = useState('patient');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -73,7 +75,7 @@ export default function Register({ setActivePage }) {
           <h2 className="text-2xl font-black tracking-tight text-slate-900">
             Join <span className="text-green-600">CLINORA</span>
           </h2>
-          <p className="text-xs text-slate-500 mt-1">Select your account role and enter your Gmail details</p>
+          <p className="text-xs text-slate-500 mt-1">{t('register.selectRole')}</p>
         </div>
 
         {errorMsg && (
@@ -95,7 +97,7 @@ export default function Register({ setActivePage }) {
             }`}
           >
             <User className="w-4 h-4 text-green-600" />
-            <span>Register as Patient</span>
+            <span>{t('register.registerAsPatient')}</span>
           </button>
 
           <button
@@ -108,7 +110,7 @@ export default function Register({ setActivePage }) {
             }`}
           >
             <Stethoscope className="w-4 h-4 text-blue-600" />
-            <span>Register as Doctor</span>
+            <span>{t('register.registerAsDoctor')}</span>
           </button>
         </div>
 
@@ -116,7 +118,7 @@ export default function Register({ setActivePage }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-              Full Legal Name
+              {t('register.fullLegalName')}
             </label>
             <div className="relative">
               <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -133,7 +135,7 @@ export default function Register({ setActivePage }) {
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-              Gmail Address (@gmail.com only)
+              {t('login.gmailAddress')}
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -150,7 +152,7 @@ export default function Register({ setActivePage }) {
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-              Password
+              {t('login.password')}
             </label>
             <div className="relative">
               <Key className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -160,7 +162,7 @@ export default function Register({ setActivePage }) {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
+                placeholder={t('register.atLeast6Chars')}
                 className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-xs sm:text-sm outline-none transition-all placeholder:text-slate-400"
               />
             </div>
