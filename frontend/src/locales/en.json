@@ -72,6 +72,11 @@
     "progress": "Progress"
   },
   "patient": {
+    "dashboard": "Dashboard",
+    "clinicalCaseForm": "Clinical Case Form",
+    "myCases": "My Cases",
+    "bookSpecialist": "Book Specialist",
+    "myAppointments": "My Appointments",
     "clinoraPatientPortal": "CLINORA Patient Portal",
     "submitIntake": "Submit intake cases with camera documents, browse hospital specialists, choose online/reception payments, and track visits.",
     "newCaseUpload": "New Case & Upload",

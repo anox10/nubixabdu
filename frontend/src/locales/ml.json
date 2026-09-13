@@ -58,6 +58,14 @@
     "secureRolesTitle": "Three Secure Roles",
     "secureRolesDesc": "Specialized portals for Patients, verified Doctors, and Hospital Superadmins with real-time appointment tracking and operational analytics."
   },
+  "patient": {
+    "dashboard": "Dashboard",
+    "clinicalCaseForm": "Clinical Case Form",
+    "myCases": "My Cases",
+    "bookSpecialist": "Book Specialist",
+    "myAppointments": "My Appointments",
+    "clinoraPatientPortal": "CLINORA Patient Portal"
+  },
   "myAppointments": {
     "title": "My Hospital Appointments",
     "subtitle": "Track doctor confirmation status, payment receipts, and attached clinical cases.",
