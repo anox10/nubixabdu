@@ -317,7 +317,7 @@ export default function PatientDashboard({ setActivePage }) {
 
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs space-y-4">
             <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">
-              Quick Actions
+              {t('patient.quickActions')}
             </h3>
 
             <button
@@ -328,9 +328,9 @@ export default function PatientDashboard({ setActivePage }) {
                 <PlusCircle className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-900">1. Fill Case & Capture Docs</h4>
+                <h4 className="text-sm font-bold text-slate-900">{t('patient.fillCaseCaptureDocs')}</h4>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Input symptoms and use camera to upload old reports or X-rays.
+                  {t('patient.fillCaseCaptureDocsDesc')}
                 </p>
               </div>
             </button>
@@ -343,9 +343,9 @@ export default function PatientDashboard({ setActivePage }) {
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-900">2. Book Specialist & Pay</h4>
+                <h4 className="text-sm font-bold text-slate-900">{t('patient.bookSpecialistPay')}</h4>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Pick doctor, time slot, and choose Pay Online or Pay at Reception.
+                  {t('patient.bookSpecialistPayDesc')}
                 </p>
               </div>
             </button>
@@ -358,9 +358,9 @@ export default function PatientDashboard({ setActivePage }) {
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-900">3. Track & Cancel Visits</h4>
+                <h4 className="text-sm font-bold text-slate-900">{t('patient.trackCancelVisits')}</h4>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Check doctor confirmation status and payment receipts.
+                  {t('patient.trackCancelVisitsDesc')}
                 </p>
               </div>
             </button>
