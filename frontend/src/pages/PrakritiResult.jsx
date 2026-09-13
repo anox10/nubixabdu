@@ -1,8 +1,10 @@
 import React from 'react';
 import { calculatePrakritiResult, WELLNESS_SUGGESTIONS, CHARACTERISTICS, DOSHA_INFO } from '../utils/prakritiCalculator';
+import { useLanguage } from '../context/LanguageContext';
 import { PRAKRITI_QUESTIONS } from '../data/prakritiData';
 
 export default function PrakritiResult({ result, answers, onRetake, onSave, onPrint, saveStatus, setActivePage }) {
+  const { t } = useLanguage();
   const { dominantLabel, dominantType, primaryDosha, secondaryDosha, vataPercent, pittaPercent, kaphaPercent, vataScore, pittaScore, kaphaScore, totalAnswered, totalQuestions } = result;
 
   const primaryInfo = DOSHA_INFO[primaryDosha] || {};
@@ -23,13 +25,13 @@ export default function PrakritiResult({ result, answers, onRetake, onSave, onPr
       {/* Header */}
       <div className="text-center animate-fade-in">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-50 border border-green-200 text-green-700 text-xs font-bold mb-4">
-          🌿 Your Prakriti Result
+          🌿 {t('prakriti.title')}
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-          Discover Your Prakriti
+          {t('prakriti.title')}
         </h1>
         <p className="text-slate-500 mt-2 text-sm max-w-lg mx-auto">
-          Based on your answers, here's your Ayurvedic constitutional profile.
+          {t('prakriti.subtitle')}
         </p>
       </div>
 
@@ -91,7 +93,7 @@ export default function PrakritiResult({ result, answers, onRetake, onSave, onPr
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fade-in">
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
           <h3 className="text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-            <span>📋</span> Common Characteristics
+            <span>📋</span> {t('prakriti.commonCharacteristics')}
           </h3>
           <ul className="space-y-2">
             {primaryChars.map((c, i) => (
@@ -109,7 +111,7 @@ export default function PrakritiResult({ result, answers, onRetake, onSave, onPr
 
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
           <h3 className="text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-            <span>💡</span> Lifestyle Suggestions
+            <span>💡</span> {t('prakriti.lifestyleSuggestions')}
           </h3>
           <ul className="space-y-2">
             {primaryTips.map((t, i) => (
@@ -128,7 +130,7 @@ export default function PrakritiResult({ result, answers, onRetake, onSave, onPr
 
       {/* Disclaimer */}
       <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-slate-500 text-xs text-center">
-        ⚠️ This assessment is based on traditional Ayurvedic concepts and is intended for educational and wellness purposes only. It is not a medical diagnosis or a substitute for professional medical advice.
+        ⚠️ {t('prakriti.disclaimer')}
       </div>
 
       {/* Save status */}
@@ -142,25 +144,25 @@ export default function PrakritiResult({ result, answers, onRetake, onSave, onPr
           onClick={onRetake}
           className="px-6 py-3 rounded-2xl bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition-colors"
         >
-          Retake Test
+          {t('common.retakeTest')}
         </button>
         <button
           onClick={onSave}
           className="px-6 py-3 rounded-2xl bg-green-600 text-white text-sm font-bold hover:bg-green-700 transition-colors shadow-md shadow-green-600/20"
         >
-          Save Result
+          {t('common.saveResult')}
         </button>
         <button
           onClick={onPrint}
           className="px-6 py-3 rounded-2xl bg-white text-slate-700 text-sm font-bold border border-slate-200 hover:bg-slate-50 transition-colors"
         >
-          Print Result
+          {t('common.printResult')}
         </button>
         <button
           onClick={() => setActivePage('patient-dashboard')}
           className="px-6 py-3 rounded-2xl bg-white text-slate-700 text-sm font-bold border border-slate-200 hover:bg-slate-50 transition-colors"
         >
-          Back to Dashboard
+          {t('common.backToDashboard')}
         </button>
       </div>
     </div>

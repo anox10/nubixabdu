@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { api } from '../../services/api';
 import VoiceInput from '../../components/VoiceInput';
 import {
@@ -31,6 +32,7 @@ import {
 } from 'lucide-react';
 
 export default function NewCase({ setActivePage }) {
+  const { t } = useLanguage();
   const { showToast } = useAuth();
   const [chiefComplaint, setChiefComplaint] = useState('');
   const [durationOfSymptoms, setDurationOfSymptoms] = useState('');
@@ -69,7 +71,7 @@ export default function NewCase({ setActivePage }) {
 
     files.forEach((file) => {
       if (file.size > 5 * 1024 * 1024) {
-        showToast(`File ${file.name} exceeds 5MB limit.`, 'warning');
+        showToast(t('patient.fileSizeLimit', { name: file.name }), 'warning');
         return;
       }
 
@@ -91,7 +93,7 @@ export default function NewCase({ setActivePage }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!chiefComplaint.trim()) {
-      showToast('Please enter your chief complaint / symptoms.', 'warning');
+      showToast(t('patient.chiefComplaintRequired'), 'warning');
       return;
     }
 
@@ -139,10 +141,10 @@ export default function NewCase({ setActivePage }) {
         attachment_urls: attachments
       });
 
-      showToast('Clinical case & complete Prakriti assessment saved successfully!', 'success');
+      showToast(t('patient.caseSaved'), 'success');
       setActivePage('patient-book');
     } catch (err) {
-      showToast(err.message || 'Failed to submit case', 'error');
+      showToast(err.message || t('patient.failedToSubmitCase'), 'error');
     } finally {
       setSubmitting(false);
     }
@@ -164,9 +166,9 @@ export default function NewCase({ setActivePage }) {
             </div>
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-200">
-                CLINORA Clinical Intake & Prakriti Profiler
+                CLINORA {t('prakriti.ayurvedicPrakritiAssessment')}
               </span>
-              <h1 className="text-2xl font-black tracking-tight">Structured Medical Case & Constitutional Intake</h1>
+              <h1 className="text-2xl font-black tracking-tight">{t('newCase.structuredMedicalCaseTitle')}</h1>
             </div>
           </div>
           <p className="text-xs sm:text-sm text-emerald-100 mt-2.5 max-w-2xl relative z-10 leading-relaxed">

@@ -2,12 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { calculatePrakritiResult, WELLNESS_SUGGESTIONS, CHARACTERISTICS, DOSHA_INFO } from '../utils/prakritiCalculator';
 import { PRAKRITI_QUESTIONS } from '../data/prakritiData';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { supabase } from '../lib/supabase';
 import PrakritiResult from './PrakritiResult';
 
 const STORAGE_KEY = 'prakriti_test_progress';
 
 export default function PrakritiTest({ setActivePage }) {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -146,23 +148,23 @@ export default function PrakritiTest({ setActivePage }) {
       {/* Header */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-50 border border-green-200 text-green-700 text-xs font-bold mb-4">
-          🌿 Ayurvedic Prakriti Assessment
+          🌿 {t('prakritiTest.title')}
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-          Discover Your Prakriti
+          {t('prakritiTest.title')}
         </h1>
         <p className="text-slate-500 mt-2 text-sm max-w-lg mx-auto">
-          Answer a few questions to understand your predominant Ayurvedic constitution.
+          {t('prakritiTest.subtitle')}
         </p>
         <p className="text-slate-400 mt-1 text-xs">
-          Prakriti refers to an individual's natural constitutional tendencies according to Ayurveda.
+          {t('prakritiTest.disclaimer')}
         </p>
         <div className="mt-4 flex items-center justify-center gap-4 text-xs text-slate-400">
-          <span>⏱ ~5 minutes</span>
+          <span>⏱ {t('prakritiTest.estimatedTime')}</span>
           <span>•</span>
-          <span>{totalQuestions} questions</span>
+          <span>{totalQuestions} {t('prakritiTest.questions')}</span>
           <span>•</span>
-          <span>Question {currentQuestion + 1} of {totalQuestions}</span>
+          <span>{t('prakritiTest.question')} {currentQuestion + 1} {t('prakritiTest.of')} {totalQuestions}</span>
         </div>
       </div>
 
@@ -247,7 +249,7 @@ export default function PrakritiTest({ setActivePage }) {
                 : 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50'
             }`}
           >
-            ← Previous
+            ← {t('prakritiTest.previous')}
           </button>
 
           <button
@@ -259,7 +261,7 @@ export default function PrakritiTest({ setActivePage }) {
                 : 'bg-slate-100 text-slate-400 cursor-not-allowed'
             }`}
           >
-            {currentQuestion === totalQuestions - 1 ? 'View Results →' : 'Next →'}
+            {currentQuestion === totalQuestions - 1 ? `${t('prakritiTest.viewResults')} →` : `${t('prakritiTest.next')} →`}
           </button>
         </div>
 
